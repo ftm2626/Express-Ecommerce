@@ -1,12 +1,17 @@
-import { object, string } from "zod";
+import { z } from "zod";
+import { validateData } from "../../utils/validation";
 
-export const userSchema = {
-  body: object({
-    first_name: string({ required_error: "لطفا اسم را وارد کنید!" }),
-    last_name: string({ required_error: "لطفا اسم را وارد کنید!" }),
-    email: string({ required_error: "لطفا ایمیل را وارد کنید!" }).email(
-      "فرمت ایمیل را درست وارد کنید!"
-    ),
-    password:string({required_error:"لطفا رمز عبور را وارد کنید."})
-  }),
+export const userSchema = z.object({
+  first_name: z.string({ required_error: "لطفا اسم را وارد کنید!" }),
+  last_name: z.string({ required_error: "لطفا اسم را وارد کنید!" }),
+  email: z
+    .string({ required_error: "لطفا ایمیل را وارد کنید!" })
+    .email("فرمت ایمیل را درست وارد کنید!"),
+  password: z.string({ required_error: "لطفا رمز عبور را وارد کنید." }),
+});
+
+export type userInputT = z.infer<typeof userSchema>;
+
+export const validateUser = (data: unknown): userInputT => {
+  return validateData(userSchema, data);
 };

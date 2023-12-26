@@ -3,6 +3,8 @@ import express from "express";
 import logger from "./utils/logger";
 import dotenv from "dotenv";
 import authRouter from "./modules/auth/auth.route";
+import { notFoundMiddleware } from "./middleware/not-found";
+import { errorHandlerMiddelware } from "./middleware/error-handler";
 
 dotenv.config();
 const app = express();
@@ -15,7 +17,10 @@ app.use(
   })
 );
 
-app.use("/api/user", authRouter);
+app.use("/api/auth", authRouter);
+
+app.use(errorHandlerMiddelware)
+app.use(notFoundMiddleware)
 
 const server = app.listen(4000, async () => {
   logger.info("server running on port 4000");
