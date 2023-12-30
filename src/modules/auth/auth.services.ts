@@ -1,7 +1,6 @@
 import { pool } from "../../utils/database";
-import { loginT } from "./auth.model";
 
-export const loginService = async (email:string) => {
+export const findUserService = async (email: string) => {
   const [query] = await pool.promise().query(
     `
       SELECT * FROM users WHERE  email = ?;

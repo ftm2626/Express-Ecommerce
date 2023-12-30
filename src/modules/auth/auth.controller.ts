@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { loginMsg, successMsg } from "../../utils/responseMsg";
 import { loginInputT, validateLogin } from "./auth.schema";
-import { loginService } from "./auth.services";
+import { findUserService } from "./auth.services";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 
@@ -14,7 +14,7 @@ export const loginController = async (
   try {
     validateLogin(req.body);
     const { email, password } = req.body;
-    const data = await loginService(email);
+    const data = await findUserService(email);
     if (data.length === 0) {
       return res.status(StatusCodes.UNAUTHORIZED).json({
         status: StatusCodes.UNAUTHORIZED,

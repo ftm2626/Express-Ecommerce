@@ -5,5 +5,8 @@ export const tokenMsg = "احراز هویت انجام نشده!"
 export const unauthMsg = "شما اجازه دسترسی به این بخش را ندارید!"
 export const loginMsg ={
     credentials : "ایمیل یا رمز عبور اشتباه است!"
+}
 
+export const userMsg ={
+    exists:"کاربر با این ایمیل وجود دارد!"
 }
