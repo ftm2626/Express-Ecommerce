@@ -1,33 +1,37 @@
 import { NextFunction, Request, Response } from "express";
 import {
-  createUserService,
-  deleteOneUserService,
-  getAllUsersService,
-  getOneUserService,
-  updateUserService,
-} from "./user.services";
+  createCustomerService,
+  deleteOneCustomerService,
+  getAllCustomersService,
+  getOneCustomerService,
+  updateCustomerService,
+} from "./customers.services";
 import { StatusCodes } from "http-status-codes";
 import { createdMsg, successMsg, userMsg } from "../../utils/responseMsg";
-import { updateUserInputT, userInputT, validateUser } from "./user.schema";
+import {
+  updateCustomerInputT,
+  customerInputT,
+  validateUpdateCustomer,
+  validateCustomer,
+} from "./customers.schema";
 import bcrypt from "bcrypt";
-import { findUserService } from "../auth/auth.services";
 
-export const createUser = async (
-  req: Request<{}, {}, userInputT>,
+export const createCustomer = async (
+  req: Request<{}, {}, customerInputT>,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    validateUser(req.body);
+    validateCustomer(req.body);
     const { last_name, first_name, email, password } = req.body;
     const hashedPwd = await bcrypt.hash(password, 10);
-    const user = await findUserService(email);
-    if (user.length === 1) {
+    const customer = await getOneCustomerService(email);
+    if (customer.length === 1) {
       return res
         .status(StatusCodes.BAD_REQUEST)
         .json({ status: StatusCodes.CREATED, message: userMsg.exists });
     }
-    await createUserService({
+    await createCustomerService({
       first_name,
       last_name,
       email,
@@ -41,13 +45,13 @@ export const createUser = async (
   }
 };
 
-export const getAllUsersController = async (
+export const getAllCustomersController = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const data = await getAllUsersService();
+    const data = await getAllCustomersService();
     return res
       .status(StatusCodes.OK)
       .json({ status: StatusCodes.OK, message: successMsg, data });
@@ -56,13 +60,13 @@ export const getAllUsersController = async (
   }
 };
 
-export const getOneUserController = async (
+export const getOneCustomerController = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const data = await getOneUserService(+req.params.id);
+    const data = await getOneCustomerService(+req.params.id);
     if (data.length === 0) {
       return res
         .status(StatusCodes.BAD_REQUEST)
@@ -76,19 +80,19 @@ export const getOneUserController = async (
   }
 };
 
-export const deleteOneUserController = async (
+export const deleteOneCustomerController = async (
   req: Request<{ id: string }>,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const user = await findUserService(req.params.id);
-    if (user.length === 0) {
+    const customer = await getOneCustomerService(req.params.id);
+    if (customer.length === 0) {
       return res
         .status(StatusCodes.BAD_REQUEST)
         .json({ status: StatusCodes.CREATED, message: userMsg.noUser });
     }
-    await deleteOneUserService(+req.params.id);
+    await deleteOneCustomerService(+req.params.id);
     return res
       .status(StatusCodes.OK)
       .json({ status: StatusCodes.OK, message: successMsg });
@@ -97,21 +101,21 @@ export const deleteOneUserController = async (
   }
 };
 
-export const updateUserController = async (
-  req: Request<{ id: string }, {}, updateUserInputT>,
+export const updateCustomerController = async (
+  req: Request<{ id: string }, {}, updateCustomerInputT>,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    validateUser(req.body);
+    validateUpdateCustomer(req.body);
     const { last_name, first_name, email } = req.body;
-    const user = await findUserService(req.params.id);
-    if (user.length === 0) {
+    const customer = await getOneCustomerService(req.params.id);
+    if (customer.length === 0) {
       return res
         .status(StatusCodes.BAD_REQUEST)
-        .json({ status: StatusCodes.CREATED, message: userMsg.noUser });
+        .json({ status: StatusCodes.BAD_REQUEST, message: userMsg.noUser });
     }
-    await updateUserService(
+    await updateCustomerService(
       {
         first_name,
         last_name,
@@ -120,8 +124,8 @@ export const updateUserController = async (
       +req.params.id
     );
     return res
-      .status(StatusCodes.CREATED)
-      .json({ status: StatusCodes.CREATED, message: createdMsg });
+      .status(StatusCodes.OK)
+      .json({ status: StatusCodes.OK, message: successMsg });
   } catch (error) {
     next(error);
   }

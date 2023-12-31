@@ -5,7 +5,7 @@ import dotenv from "dotenv";
 import authRouter from "./modules/auth/auth.route";
 import { notFoundMiddleware } from "./middleware/not-found";
 import { errorHandlerMiddelware } from "./middleware/error-handler";
-import usersRouter from "./modules/user/user.route";
+import usersRouter from "./modules/customers/customers.route";
 import { authenticationMiddleware } from "./middleware/authentication";
 
 dotenv.config();
@@ -21,7 +21,7 @@ app.use(
 
 app.use("/api/auth", authRouter);
 app.use(authenticationMiddleware);
-app.use("/api/user", usersRouter);
+app.use("/api", usersRouter);
 
 app.use(errorHandlerMiddelware);
 app.use(notFoundMiddleware);

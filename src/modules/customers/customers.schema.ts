@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { validateData } from "../../utils/validation";
 
-export const userSchema = z.object({
+export const customerSchema = z.object({
   first_name: z.string({ required_error: "لطفا اسم را وارد کنید!" }),
   last_name: z.string({ required_error: "لطفا اسم را وارد کنید!" }),
   email: z
@@ -10,13 +10,13 @@ export const userSchema = z.object({
   password: z.string({ required_error: "لطفا رمز عبور را وارد کنید." }),
 });
 
-export type userInputT = z.infer<typeof userSchema>;
+export type customerInputT = z.infer<typeof customerSchema>;
 
-export const validateUser = (data: unknown): userInputT => {
-  return validateData(userSchema, data);
+export const validateCustomer = (data: unknown): customerInputT => {
+  return validateData(customerSchema, data);
 };
 
-export const updateUserSchema = z.object({
+export const updateCustomerSchema = z.object({
   first_name: z.string({ required_error: "لطفا اسم را وارد کنید!" }),
   last_name: z.string({ required_error: "لطفا اسم را وارد کنید!" }),
   email: z
@@ -24,8 +24,8 @@ export const updateUserSchema = z.object({
     .email("فرمت ایمیل را درست وارد کنید!"),
 });
 
-export type updateUserInputT = z.infer<typeof updateUserSchema>;
+export type updateCustomerInputT = z.infer<typeof updateCustomerSchema>;
 
-export const validateUpdateUser = (data: unknown): updateUserInputT => {
-  return validateData(updateUserSchema, data);
+export const validateUpdateCustomer = (data: unknown): updateCustomerInputT => {
+  return validateData(updateCustomerSchema, data);
 };
