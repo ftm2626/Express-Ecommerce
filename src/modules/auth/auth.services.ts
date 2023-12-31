@@ -1,11 +1,15 @@
+import { RowDataPacket } from "mysql2/promise";
 import { pool } from "../../utils/database";
 
-export const findUserService = async (email: string) => {
-  const [query] = await pool.promise().query(
-    `
-      SELECT * FROM users WHERE  email = ?;
+
+export const findUserService = async (data: string) => {
+  const [query]: [RowDataPacket[],any] = await pool
+    .promise()
+    .query(
+      `
+      SELECT * FROM users WHERE  email = ? OR user_id = ? ;
     `,
-    [email]
-  );
+      [data, data]
+    );
   return query;
 };

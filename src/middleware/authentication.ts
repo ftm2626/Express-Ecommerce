@@ -14,7 +14,7 @@ export const authenticationMiddleware = (
       .status(StatusCodes.NOT_FOUND)
       .json({ status: StatusCodes.NOT_FOUND, message: tokenMsg });
   }
-  jwt.verify(token, "jasi", (err: any, decoded: any) => {
+  jwt.verify(token.replace(/^Bearer\s/, ""), "jasi", (err: any, decoded: any) => {
     if (err) {
       return res
         .status(StatusCodes.NOT_FOUND)
