@@ -1,10 +1,17 @@
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
-import { loginMsg, successMsg } from "../../utils/responseMsg";
-import { loginInputT, validateLogin } from "./auth.schema";
+import { authMsg, loginMsg, successMsg, userMsg } from "../../utils/responseMsg";
+import {
+  loginInputT,
+  registerInputT,
+  validateLogin,
+  validateRegister,
+} from "./auth.schema";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { getOneCustomerService } from "../customers/customers.services";
+import { findOneRoleService } from "../roles/roles.services";
+import { findOneUserService } from "../users/users.services";
 
 export const loginController = async (
   req: Request<{}, {}, loginInputT>,
@@ -32,7 +39,7 @@ export const loginController = async (
     }
 
     const token = jwt.sign(
-      { userId: data[0].user_id, email: data[0].email },
+      { userId: data[0].customer_id, email: data[0].email },
       "jasi",
       { expiresIn: "30d" }
     );
@@ -44,5 +51,33 @@ export const loginController = async (
     });
   } catch (error) {
     next(error);
+  }
+};
+
+export const registerController = async (
+  req: Request<{}, {}, registerInputT>,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    validateRegister(req.body);
+    const { role, username, password, first_name, last_name, email } = req.body;
+    const roleQuery = await findOneRoleService(role);
+    if (roleQuery.length === 0) {
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ status: StatusCodes.BAD_REQUEST, message: authMsg.noRole });
+    }
+    const usernameQuery = await findOneUserService(username);
+    if (usernameQuery.length === 0) {
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ status: StatusCodes.BAD_REQUEST, message: userMsg.exists});
+    }
+    const roleId = roleQuery[0].role_id;
+    
+    
+  } catch (error) {
+    next(error)
   }
 };

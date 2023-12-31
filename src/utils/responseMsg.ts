@@ -7,7 +7,11 @@ export const loginMsg = {
   credentials: "ایمیل یا رمز عبور اشتباه است!",
 };
 
+export const authMsg ={
+  noRole:"این نقش وجود ندارد!"
+}
+
 export const userMsg = {
-  exists: "کاربر با این ایمیل وجود دارد!",
+  exists: "کاربر با این نام کاربری وجود دارد!",
   noUser: "کاربری با این مشخصات وجود ندارد",
 };
