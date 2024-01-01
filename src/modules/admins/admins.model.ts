@@ -1,11 +1,11 @@
-export type createCustomerT = {
+export type createAdminT = {
   userId: string;
   first_name: string;
   last_name: string;
   email: string;
 };
 
-export type updataCustomerT = {
+export type updataAdminT = {
   first_name: string;
   last_name: string;
   email: string;

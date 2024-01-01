@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from "express";
 import {
-  createCustomerService,
   deleteOneCustomerService,
   getAllCustomersService,
   getOneCustomerService,
@@ -10,40 +9,9 @@ import { StatusCodes } from "http-status-codes";
 import { createdMsg, successMsg, userMsg } from "../../utils/responseMsg";
 import {
   updateCustomerInputT,
-  customerInputT,
   validateUpdateCustomer,
-  validateCustomer,
 } from "./customers.schema";
-import bcrypt from "bcrypt";
 
-export const createCustomer = async (
-  req: Request<{}, {}, customerInputT>,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    validateCustomer(req.body);
-    const { last_name, first_name, email, password } = req.body;
-    const hashedPwd = await bcrypt.hash(password, 10);
-    const customer = await getOneCustomerService(email);
-    if (customer.length === 1) {
-      return res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ status: StatusCodes.CREATED, message: userMsg.exists });
-    }
-    await createCustomerService({
-      first_name,
-      last_name,
-      email,
-      password: hashedPwd,
-    });
-    return res
-      .status(StatusCodes.CREATED)
-      .json({ status: StatusCodes.CREATED, message: createdMsg });
-  } catch (error) {
-    next(error);
-  }
-};
 
 export const getAllCustomersController = async (
   req: Request,

@@ -1,5 +1,6 @@
 import { RowDataPacket } from "mysql2/promise";
 import { pool } from "../../utils/database";
+import { registerUserT } from "./user.model";
 
 export const createUsersTableService = async () => {
   const [query] = await pool.promise().query(`
@@ -24,14 +25,18 @@ export const findOneUserService = async (data: string) => {
   return query;
 };
 
-export const addUserService = async (userId: string) => {
+export const addUserService = async ({
+  userId,
+  username,
+  password,
+}: registerUserT) => {
   const [query]: [RowDataPacket[], any] = await pool.promise().query(
     `
-        INSERT INTO users (user_id,username,password)
+        INSERT INTO users (role_id,username,password)
         VALUES (?,?,?)
         ;
     `,
-    [userId]
+    [userId, username, password]
   );
   return query;
 };

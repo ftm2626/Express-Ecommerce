@@ -1,6 +1,12 @@
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
-import { authMsg, loginMsg, successMsg, userMsg } from "../../utils/responseMsg";
+import {
+  authMsg,
+  createdMsg,
+  loginMsg,
+  successMsg,
+  userMsg,
+} from "../../utils/responseMsg";
 import {
   loginInputT,
   registerInputT,
@@ -9,9 +15,13 @@ import {
 } from "./auth.schema";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-import { getOneCustomerService } from "../customers/customers.services";
+import {
+  createCustomerService,
+  getOneCustomerService,
+} from "../customers/customers.services";
 import { findOneRoleService } from "../roles/roles.services";
-import { findOneUserService } from "../users/users.services";
+import { addUserService, findOneUserService } from "../users/users.services";
+import { createAdminService } from "../admins/admins.services";
 
 export const loginController = async (
   req: Request<{}, {}, loginInputT>,
@@ -69,15 +79,37 @@ export const registerController = async (
         .json({ status: StatusCodes.BAD_REQUEST, message: authMsg.noRole });
     }
     const usernameQuery = await findOneUserService(username);
-    if (usernameQuery.length === 0) {
+    if (usernameQuery.length > 0) {
       return res
         .status(StatusCodes.BAD_REQUEST)
-        .json({ status: StatusCodes.BAD_REQUEST, message: userMsg.exists});
+        .json({ status: StatusCodes.BAD_REQUEST, message: userMsg.exists });
     }
     const roleId = roleQuery[0].role_id;
-    
-    
+    const hashedPwd = await bcrypt.hash(password, 10);
+    const addUserQuery = await addUserService({
+      userId: roleId,
+      username,
+      password: hashedPwd,
+    });
+    const userId = addUserQuery.insertId;
+    const detailsTable =
+      role === "Admin"
+        ? await createAdminService({
+            userId: userId,
+            first_name,
+            last_name,
+            email,
+          })
+        : await createCustomerService({
+            userId: userId,
+            first_name,
+            last_name,
+            email,
+          });
+    return res
+      .status(StatusCodes.CREATED)
+      .json({ status: StatusCodes.CREATED, message: createdMsg });
   } catch (error) {
-    next(error)
+    next(error);
   }
 };

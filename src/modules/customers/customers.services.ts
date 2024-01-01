@@ -6,13 +6,13 @@ export const createCustomersTableService = async () => {
   const query = pool.promise().query(`
         CREATE TABLE IF NOT EXISTS customers (
             customer_id INT PRIMARY KEY AUTO_INCREMENT,
-            first_name VARCHAR(50),
-            last_name VARCHAR(50) NOT NULL,
-            email VARCHAR(30) UNIQUE, 
-            password VARCHAR(100) NOT NULL,
-            role VARCHAR(20) DEFAULT "customer"
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+            user_id INT,
+            first_name VARCHAR(255) NOT NULL ,
+            last_name VARCHAR(255) NOT NULL,
+            email VARCHAR(255) NOT NULL,
+            address TEXT,
+            phone_number VARCHAR(20),
+            FOREIGN KEY (user_id) REFERENCES users(user_id)
         );
     `);
   return query;
@@ -21,10 +21,10 @@ export const createCustomersTableService = async () => {
 export const createCustomerService = async (info: createCustomerT) => {
   const query = pool.execute(
     `
-      INSERT INTO customers (first_name, last_name, email, password)
+      INSERT INTO customers (user_id ,first_name, last_name, email)
       VALUES (?,?,?,?);
     `,
-    [info.first_name, info.last_name, info.email, info.password]
+    [info.userId,info.first_name, info.last_name, info.email]
   );
   return query;
 };

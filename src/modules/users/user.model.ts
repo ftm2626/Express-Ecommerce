@@ -1,0 +1,1 @@
+export type registerUserT = { userId: string; username: string; password: string };
