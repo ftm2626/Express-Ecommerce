@@ -6,7 +6,7 @@ import {
   updateCustomerService,
 } from "./customers.services";
 import { StatusCodes } from "http-status-codes";
-import { createdMsg, successMsg, userMsg } from "../../utils/responseMsg";
+import { successMsg, userMsg } from "../../utils/responseMsg";
 import {
   updateCustomerInputT,
   validateUpdateCustomer,

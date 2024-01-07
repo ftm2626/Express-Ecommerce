@@ -74,3 +74,7 @@ export const updateCustomerService = async (
   );
   return query;
 };
+
+export const createCustomerDetailsTable =async ()=>{
+  
+}
