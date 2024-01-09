@@ -4,19 +4,45 @@ import { createCustomerT, updataCustomerT } from "./customers.model";
 
 export const createCustomersTableService = async () => {
   const query = pool.promise().query(`
-        CREATE TABLE IF NOT EXISTS customers (
-            customer_id INT PRIMARY KEY AUTO_INCREMENT,
-            user_id INT,
-            first_name VARCHAR(255) NOT NULL ,
-            last_name VARCHAR(255) NOT NULL,
-            email VARCHAR(255) NOT NULL,
-            address TEXT,
-            phone_number VARCHAR(20),
-            FOREIGN KEY (user_id) REFERENCES users(user_id)
-        );
+      CREATE TABLE IF NOT EXISTS customers (
+          customer_id INT PRIMARY KEY AUTO_INCREMENT,
+          user_id INT,
+          first_name VARCHAR(255) NOT NULL ,
+          last_name VARCHAR(255) NOT NULL,
+          email VARCHAR(255) NOT NULL,
+          address TEXT,
+          phone_number VARCHAR(20),
+          FOREIGN KEY (user_id) REFERENCES users(user_id)
+      );
     `);
   return query;
 };
+
+export const createCustomerDetailsTableService = () => {
+  const query = pool.promise().query(`
+    CREATE TABLE customer_details(
+      user_id INT PRIMARY KEY,
+      date_of_birth DATE,
+      gender ENUM(),
+      profile_picture_url VARCHAR(255),
+      FOREIGN KEY (user_id) REFERENCES users(user_id)
+    );
+  `);
+  return query;
+};
+
+export const createCustomerPreferencesTableService = () => {
+  const query = pool.promise().query(`
+    CREATE TABLE customer_preferences(
+      user_id INT PRIMARY KEY,
+      receive_promotional_emails BOOLEAN DEFAULT true,
+      reveive_newsletter BOOLEAN DEFAULT true,
+      FOREIGN KEY (user_id) REFERENCES users(user_id)
+    );
+  `);
+  return query;
+};
+
 
 export const createCustomerService = async (info: createCustomerT) => {
   const query = pool.execute(
@@ -24,7 +50,7 @@ export const createCustomerService = async (info: createCustomerT) => {
       INSERT INTO customers (user_id ,first_name, last_name, email)
       VALUES (?,?,?,?);
     `,
-    [info.userId,info.first_name, info.last_name, info.email]
+    [info.userId, info.first_name, info.last_name, info.email]
   );
   return query;
 };
@@ -75,6 +101,4 @@ export const updateCustomerService = async (
   return query;
 };
 
-export const createCustomerDetailsTable =async ()=>{
-  
-}
+export const createCustomerDetailsTable = async () => {};
