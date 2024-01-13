@@ -24,7 +24,38 @@ export const createOrderHistoryTableService = () => {
         order_status ENUM('Pending', 'Shipped', 'Delivered', 'Cancelled') NOT NULL,
         status_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (order_id) REFERENCES orders(order_id)
-    )
+    );
     `);
   return query;
 };
+
+export const createOrderTrackingTableService = () => {
+  const query = pool.promise().query(`
+      CREATE TABLE order_tracking (
+          tracking_id INT PRIMARY KEY AUTO_INCREMENT,
+          order_id INT,
+          status VARCHAR(255) NOT NULL,
+          location VARCHAR(255),
+          update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+          FOREIGN KEY (order_id) REFERENCES orders(order_id)
+      );
+    `);
+  return query;
+};
+
+
+export const createOrderReturnsTableService = () => {
+  const query = pool.promise().query(`
+      CREATE TABLE order_returns (
+          return_id INT PRIMARY KEY AUTO_INCREMENT,
+          order_id INT,
+          return_reason TEXT NOT NULL,
+          return_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+          return_status ENUM('Requested', 'Approved', 'Processing', 'Completed', 'Cancelled') DEFAULT 'Requested',
+          FOREIGN KEY (order_id) REFERENCES orders(order_id)
+      );
+    `);
+  return query;
+};
+
+
