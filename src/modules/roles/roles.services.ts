@@ -26,7 +26,7 @@ export const addRoleService = async (role: string) => {
 export const findOneRoleService = async (role: string) => {
   const [query]: [RowDataPacket[], any] = await pool.promise().query(
     `
-        SELECT role_id FROM roles WHERE role_name = ?
+        SELECT role_id FROM roles WHERE role_name = ?;
     `,
     [role]
   );

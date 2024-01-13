@@ -1,19 +1,19 @@
 import { pool } from "../../utils/database";
 
-export const createWishlistsTableService = () => {
-  const query = pool.promise().query(`
-    CREATE TABLE wishlists (
-        wishlist_id INT PRIMARY KEY AUTO_INCREMENT,
-        user_id INT,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (user_id) REFERENCES users(user_id)
-    );
+export const createWishlistsTableService = async () => {
+  const query = await pool.promise().query(`
+      CREATE TABLE wishlists (
+          wishlist_id INT PRIMARY KEY AUTO_INCREMENT,
+          user_id INT,
+          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+          FOREIGN KEY (user_id) REFERENCES users(user_id)
+      );
     `);
   return query;
 };
 
-export const createWishlistItemsTableService = () => {
-  const query = pool.promise().query(`
+export const createWishlistItemsTableService = async () => {
+  const query = await pool.promise().query(`
       CREATE TABLE wishlist_items (
           wishlist_item_id INT PRIMARY KEY AUTO_INCREMENT,
           wishlist_id INT,
@@ -25,3 +25,12 @@ export const createWishlistItemsTableService = () => {
   return query;
 };
 
+export const findWhishList = async (userId: number) => {
+  const query = await pool.promise().query(
+    `
+  SELECT wishlist_id FROM wishlists WHERE user_id = ?
+  `,
+    [userId]
+  );
+  return query;
+};
