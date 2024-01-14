@@ -3,11 +3,11 @@ CREATE DATABASE ecommerce;
 USE ecommerce;
 -- Users and Roles
 CREATE TABLE roles (
-    role_id INT PRIMARY KEY,
+    role_id INT PRIMARY KEY AUTO_INCREMENT,
     role_name VARCHAR(50) NOT NULL
 );
 CREATE TABLE users (
-    user_id INT PRIMARY KEY,
+    user_id INT PRIMARY KEY AUTO_INCREMENT,
     username VARCHAR(255) NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL,
@@ -20,18 +20,18 @@ CREATE TABLE users (
 -- );
 -- Admins
 CREATE TABLE admins (
-    admin_id INT PRIMARY KEY,
+    admin_id INT PRIMARY KEY AUTO_INCREMENT,
     user_id INT,
     FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
 -- Customers
 CREATE TABLE customers (
-    customer_id INT PRIMARY KEY,
+    customer_id INT PRIMARY KEY AUTO_INCREMENT,
     user_id INT,
     FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
 CREATE TABLE customer_details (
-    customer_id INT PRIMARY KEY,
+    customer_id INT PRIMARY KEY AUTO_INCREMENT,
     first_name VARCHAR(50) NOT NULL,
     last_name VARCHAR(50) NOT NULL,
     phone_number VARCHAR(20),
@@ -39,7 +39,7 @@ CREATE TABLE customer_details (
 );
 -- Addresses
 CREATE TABLE addresses (
-    address_id INT PRIMARY KEY,
+    address_id INT PRIMARY KEY AUTO_INCREMENT,
     customer_id INT,
     address_line1 VARCHAR(255) NOT NULL,
     address_line2 VARCHAR(255),
@@ -52,7 +52,7 @@ CREATE TABLE addresses (
 
 -- Categories
 CREATE TABLE categories (
-    category_id INT PRIMARY KEY,
+    category_id INT PRIMARY KEY AUTO_INCREMENT,
     category_name VARCHAR(100) NOT NULL,
     parent_category_id INT,
     FOREIGN KEY (parent_category_id) REFERENCES categories(category_id)
@@ -65,31 +65,30 @@ CREATE TABLE categories (
 --     FOREIGN KEY (descendant_category_id) REFERENCES categories(category_id)
 -- );
 -- Products and Variants
-CREATE TABLE product_brands (
-    brand_id INT PRIMARY KEY,
+CREATE TABLE brands (
+    brand_id INT PRIMARY KEY AUTO_INCREMENT,
     brand_name VARCHAR(100) NOT NULL
 );
 CREATE TABLE products (
-    product_id INT PRIMARY KEY,
+    product_id INT PRIMARY KEY AUTO_INCREMENT,
     product_name VARCHAR(255) NOT NULL,
     category_id INT,
     brand_id INT,
     FOREIGN KEY (category_id) REFERENCES categories(category_id),
-    FOREIGN KEY (brand_id) REFERENCES product_brands(brand_id)
+    FOREIGN KEY (brand_id) REFERENCES brands(brand_id)
 );
 CREATE TABLE product_attributes (
-    attribute_id INT PRIMARY KEY,
-    attribute_name VARCHAR(100) NOT NULL,
-
+    attribute_id INT PRIMARY KEY AUTO_INCREMENT,
+    attribute_name VARCHAR(100) NOT NULL
 );
 CREATE TABLE product_images (
-    image_id INT PRIMARY KEY,
+    image_id INT PRIMARY KEY AUTO_INCREMENT,
     product_id INT,
     image_url VARCHAR(255) NOT NULL,
     FOREIGN KEY (product_id) REFERENCES products(product_id)
 );
 CREATE TABLE product_reviews (
-    review_id INT PRIMARY KEY,
+    review_id INT PRIMARY KEY AUTO_INCREMENT,
     product_id INT,
     user_id INT,
     rating INT,
@@ -129,13 +128,13 @@ CREATE TABLE product_reviews (
 -- );
 -- Shopping Carts
 CREATE TABLE shopping_carts (
-    cart_id INT PRIMARY KEY,
+    cart_id INT PRIMARY KEY AUTO_INCREMENT,
     customer_id INT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (customer_id) REFERENCES customers(customer_id)
 );
 CREATE TABLE cart_items (
-    cart_item_id INT PRIMARY KEY,
+    cart_item_id INT PRIMARY KEY AUTO_INCREMENT,
     cart_id INT,
     product_id INT,
     quantity INT,
@@ -160,13 +159,13 @@ CREATE TABLE cart_items (
 -- );
 -- Wishlists
 CREATE TABLE wishlists (
-    wishlist_id INT PRIMARY KEY,
+    wishlist_id INT PRIMARY KEY AUTO_INCREMENT,
     customer_id INT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (customer_id) REFERENCES customers(customer_id)
 );
 CREATE TABLE wishlist_items (
-    wishlist_item_id INT PRIMARY KEY,
+    wishlist_item_id INT PRIMARY KEY AUTO_INCREMENT,
     wishlist_id INT,
     product_id INT,
     FOREIGN KEY (wishlist_id) REFERENCES wishlists(wishlist_id),
@@ -174,7 +173,7 @@ CREATE TABLE wishlist_items (
 );
 -- Notifications
 CREATE TABLE notifications (
-    notification_id INT PRIMARY KEY,
+    notification_id INT PRIMARY KEY AUTO_INCREMENT,
     user_id INT,
     message TEXT NOT NULL,
     is_read BOOLEAN DEFAULT FALSE,
@@ -292,7 +291,7 @@ CREATE TABLE notifications (
 -- );
 -- Suppliers
 CREATE TABLE suppliers (
-    supplier_id INT PRIMARY KEY,
+    supplier_id INT PRIMARY KEY AUTO_INCREMENT,
     supplier_name VARCHAR(100) NOT NULL,
     contact_person VARCHAR(100),
     contact_email VARCHAR(255),
