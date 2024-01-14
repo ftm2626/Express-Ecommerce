@@ -7,6 +7,7 @@ import { notFoundMiddleware } from "./middleware/not-found";
 import { errorHandlerMiddelware } from "./middleware/error-handler";
 import customersRouter from "./modules/customers/customers.route";
 import { authenticationMiddleware } from "./middleware/authentication";
+import productRouter from "./modules/products/products.route";
 
 dotenv.config();
 const app = express();
@@ -20,8 +21,9 @@ app.use(
 );
 
 app.use("/api/auth", authRouter);
+app.use("/api/products", productRouter);
 app.use(authenticationMiddleware);
-app.use("/api", customersRouter);
+app.use("/api/customers", customersRouter);
 
 app.use(errorHandlerMiddelware);
 app.use(notFoundMiddleware);

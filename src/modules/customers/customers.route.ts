@@ -8,9 +8,9 @@ import {
 
 const router = Router();
 
-router.route("/customers").get(getAllCustomersController);
+router.route("/").get(getAllCustomersController);
 router
-  .route("/customers/:id")
+  .route("/:id")
   .get(getOneCustomerController)
   .delete(deleteOneCustomerController)
   .put(updateCustomerController);
