@@ -8,6 +8,7 @@ import { errorHandlerMiddelware } from "./middleware/error-handler";
 import customersRouter from "./modules/customers/customers.route";
 import { authenticationMiddleware } from "./middleware/authentication";
 import productRouter from "./modules/products/products.route";
+import categoryRouter from "./modules/categories/categories.route";
 
 dotenv.config();
 const app = express();
@@ -22,6 +23,7 @@ app.use(
 
 app.use("/api/auth", authRouter);
 app.use("/api/products", productRouter);
+app.use("/api/categories", categoryRouter);
 app.use(authenticationMiddleware);
 app.use("/api/customers", customersRouter);
 
